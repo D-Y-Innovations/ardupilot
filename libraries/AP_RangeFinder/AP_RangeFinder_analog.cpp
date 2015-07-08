@@ -83,7 +83,7 @@ void AP_RangeFinder_analog::update_voltage(void)
 /*
   update distance_cm 
  */
-void AP_RangeFinder_analog::update(void)
+void AP_RangeFinder_analog::update(float distance)
 {
     update_voltage();
     float v = state.voltage_mv * 0.001f;

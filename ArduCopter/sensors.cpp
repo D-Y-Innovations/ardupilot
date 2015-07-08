@@ -37,7 +37,11 @@ void Copter::init_sonar(void)
 int16_t Copter::read_sonar(void)
 {
 #if CONFIG_SONAR == ENABLED
-    sonar.update();
+    #if OPTFLOW == ENABLED
+        sonar.update( optflow.getDistance() );
+    #else
+        sonar.update( -1.0 );
+    #endif
 
     // exit immediately if sonar is disabled
     if (sonar.status() != RangeFinder::RangeFinder_Good) {
@@ -62,7 +66,7 @@ int16_t Copter::read_sonar(void)
     temp = max(temp, 0.707f);
     temp_alt = (float)temp_alt * temp;
  #endif
-
+    
     return temp_alt;
 #else
     return 0;

@@ -83,3 +83,10 @@ void OpticalFlow::setHIL(const struct OpticalFlow::OpticalFlow_state &state)
         backend->_update_frontend(state); 
     }
 }
+
+float OpticalFlow::getDistance() const{
+    if (backend) {
+        return backend->getDistance(); 
+    }
+    return 0;
+}

@@ -73,6 +73,8 @@ public:
     // support for HIL/SITL
     void setHIL(const struct OpticalFlow_state &state);
 
+    float getDistance() const;
+
 private:
     OpticalFlow_backend *backend;
 

@@ -114,7 +114,7 @@ bool AP_RangeFinder_MaxsonarI2CXL::get_reading(uint16_t &reading_cm)
 /* 
    update the state of the sensor
 */
-void AP_RangeFinder_MaxsonarI2CXL::update(void)
+void AP_RangeFinder_MaxsonarI2CXL::update(float distance)
 {
     if (get_reading(state.distance_cm)) {
         // update range_valid state based on distance measured

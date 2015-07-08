@@ -32,7 +32,7 @@ public:
     virtual ~AP_RangeFinder_Backend(void) {}
 
     // update the state structure
-    virtual void update() = 0;
+    virtual void update(float distance) = 0;
 
     // return true if we are beyond the power saving range
     bool out_of_range(void) const {

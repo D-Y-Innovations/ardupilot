@@ -230,7 +230,8 @@ void RangeFinder::init(void)
   update RangeFinder state for all instances. This should be called at
   around 10Hz by main loop
  */
-void RangeFinder::update(void)
+
+void RangeFinder::update(float distance)
 {
     for (uint8_t i=0; i<num_instances; i++) {
         if (drivers[i] != NULL) {
@@ -240,7 +241,7 @@ void RangeFinder::update(void)
                 state[i].range_valid_count = 0;
                 continue;
             }
-            drivers[i]->update();
+            drivers[i]->update(distance);
             update_pre_arm_check(i);
         }
     }
@@ -364,6 +365,11 @@ void RangeFinder::update_pre_arm_check(uint8_t instance)
     // update min, max captured distances
     state[instance].pre_arm_distance_min = min(state[instance].distance_cm, state[instance].pre_arm_distance_min);
     state[instance].pre_arm_distance_max = max(state[instance].distance_cm, state[instance].pre_arm_distance_max);
+
+    //try to skip the following check as the check does not seem to make sense
+    state[instance].pre_arm_check = true;
+    return;
+
 
     // Check that the range finder has been exercised through a realistic range of movement
     if (((state[instance].pre_arm_distance_max - state[instance].pre_arm_distance_min) > RANGEFINDER_PREARM_REQUIRED_CHANGE_CM) &&

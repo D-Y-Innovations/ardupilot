@@ -35,6 +35,10 @@ public:
     // read latest values from sensor and fill in x,y and totals.
     virtual void update() = 0;
 
+    float getDistance() const { return distance ;};
+
+    void setDistance( float dist ) { distance = dist ;}
+
 protected:
     // access to frontend
     OpticalFlow &frontend;
@@ -47,6 +51,8 @@ protected:
 
     // get the yaw angle in radians
     float _yawAngleRad(void) const { return radians(float(frontend._yawAngle_cd) * 0.01f); }
+
+    float distance;
 };
 
 #endif // __OpticalFlow_backend_H__

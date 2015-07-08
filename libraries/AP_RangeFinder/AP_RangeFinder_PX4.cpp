@@ -100,7 +100,7 @@ bool AP_RangeFinder_PX4::detect(RangeFinder &_ranger, uint8_t instance)
     return true;
 }
 
-void AP_RangeFinder_PX4::update(void)
+void AP_RangeFinder_PX4::update(float distance) // if distance(from px4flow) pass in here is larger than 0.0, we will set it as sonar distance, or we will read the i2c device
 {
     if (_fd == -1) {
         set_status(RangeFinder::RangeFinder_NotConnected);
@@ -122,26 +122,30 @@ void AP_RangeFinder_PX4::update(void)
         }
     }
 
+    if( distance >= 0.0f) {
+      state.distance_cm = distance;
+      update_status();
+    }else{
+      while (::read(_fd, &range_report, sizeof(range_report)) == sizeof(range_report) &&
+             range_report.timestamp != _last_timestamp) {
+              // take reading
+              sum += range_report.current_distance;
+              count++;
+              _last_timestamp = range_report.timestamp;
+      }  
 
-    while (::read(_fd, &range_report, sizeof(range_report)) == sizeof(range_report) &&
-           range_report.timestamp != _last_timestamp) {
-            // take reading
-            sum += range_report.current_distance;
-            count++;
-            _last_timestamp = range_report.timestamp;
-    }
+      // if we have not taken a reading in the last 0.2s set status to No Data
+      if (hal.scheduler->micros64() - _last_timestamp >= 200000) {
+          set_status(RangeFinder::RangeFinder_NoData);
+      }  
 
-    // if we have not taken a reading in the last 0.2s set status to No Data
-    if (hal.scheduler->micros64() - _last_timestamp >= 200000) {
-        set_status(RangeFinder::RangeFinder_NoData);
-    }
+      if (count != 0) {
+          state.distance_cm = sum / count * 100.0f;
+          state.distance_cm += ranger._offset[state.instance];  
 
-    if (count != 0) {
-        state.distance_cm = sum / count * 100.0f;
-        state.distance_cm += ranger._offset[state.instance];
-
-        // update range_valid state based on distance measured
-        update_status();
+          // update range_valid state based on distance measured
+          update_status();
+      }
     }
 }
 

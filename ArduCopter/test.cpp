@@ -255,7 +255,7 @@ int8_t Copter::test_sonar(uint8_t argc, const Menu::arg *argv)
     print_hit_enter();
     while(1) {
         delay(100);
-        sonar.update();
+        sonar.update(-1.0); // a negative argument is passed here so it will read the data out actually
 
         cliSerial->printf_P(PSTR("Primary: status %d distance_cm %d \n"), (int)sonar.status(), sonar.distance_cm());
         cliSerial->printf_P(PSTR("All: device_0 type %d status %d distance_cm %d, device_1 type %d status %d distance_cm %d\n"),

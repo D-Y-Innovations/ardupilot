@@ -17,6 +17,8 @@ public:
     // update - read latest values from sensor and fill in x,y and totals.
     void update(void);
 
+    float distance;
+
 private:
     int         _fd;                // file descriptor for sensor
     uint64_t    _last_timestamp;    // time of last update (used to avoid processing old reports)

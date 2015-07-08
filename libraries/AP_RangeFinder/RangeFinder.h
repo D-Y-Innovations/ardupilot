@@ -100,7 +100,8 @@ public:
 
     // update state of all rangefinders. Should be called at around
     // 10Hz from main loop
-    void update(void);
+    // add distance out from optical flow as an input parameter
+    void update(float distance); 
     
 #define _RangeFinder_STATE(instance) state[instance]
 

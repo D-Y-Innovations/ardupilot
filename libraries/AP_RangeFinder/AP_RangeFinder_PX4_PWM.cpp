@@ -89,7 +89,7 @@ bool AP_RangeFinder_PX4_PWM::detect(RangeFinder &_ranger, uint8_t instance)
     return true;
 }
 
-void AP_RangeFinder_PX4_PWM::update(void)
+void AP_RangeFinder_PX4_PWM::update(float distance)
 {
     if (_fd == -1) {
         set_status(RangeFinder::RangeFinder_NotConnected);

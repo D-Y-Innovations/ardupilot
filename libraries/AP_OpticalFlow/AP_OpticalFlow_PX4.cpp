@@ -62,6 +62,9 @@ void AP_OpticalFlow_PX4::update(void)
         return;
     }
 
+    float sum = 0;
+    uint16_t count = 0;
+
     struct optical_flow_s report;
     while (::read(_fd, &report, sizeof(optical_flow_s)) == sizeof(optical_flow_s) && 
            report.timestamp != _last_timestamp) {
@@ -85,9 +88,16 @@ void AP_OpticalFlow_PX4::update(void)
             state.flowRate.zero();
             state.bodyRate.zero();
         }
+        sum += report.ground_distance_m;
+        count++;
         _last_timestamp = report.timestamp;
 
         _update_frontend(state);
+    }
+
+    if (count != 0){
+        float dist = sum / count * 100.0f;
+        setDistance( dist );
     }
 }
 

@@ -33,7 +33,7 @@ public:
     static bool detect(RangeFinder &ranger, uint8_t instance);
 
     // update state
-    void update(void);
+    void update(float distance);
 
 private:
     int _fd;
